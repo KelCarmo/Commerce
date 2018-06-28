@@ -12,11 +12,13 @@ import java.rmi.RemoteException;
  *
  * @author kelvin
  */
-public interface Calculadora extends Remote{
+public interface Commerce extends Remote{
     
     public long add(long a, long b) throws RemoteException;
     
-    public String sub(Produto a, int qtd) throws RemoteException;    
+    public void sub(int qtd, String idProd, int index) throws RemoteException;
+
+    public boolean isOn() throws RemoteException;    
     
     
     

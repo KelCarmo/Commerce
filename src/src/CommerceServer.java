@@ -13,6 +13,7 @@ import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,22 +22,23 @@ import java.util.logging.Logger;
  *
  * @author kelvin
  */
-public class CalculadoraServer {
+public class CommerceServer {
+        
     
-    public CalculadoraServer() throws RemoteException, UnknownHostException {
+    public CommerceServer(ManagerFiles manager, String ip, ArrayList<Produto> produtos) throws RemoteException, UnknownHostException {
         try {            
-            System.setProperty("java.rmi.server.hostname", "127.0.0.1");
+            System.setProperty("java.rmi.server.hostname", ip);
             LocateRegistry.createRegistry(1099);
-            Calculadora c = new CalculadoraImple();
-            Naming.bind("CalculadoraService", (Remote) c);
+            Commerce c = new CommerceImple(manager, produtos);
+            Naming.bind("CommerceService", (Remote) c);
             System.out.println("Passei aqui");
         } catch (AlreadyBoundException | MalformedURLException ex) {
-            Logger.getLogger(CalculadoraServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CommerceServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
      public static void main(String[] args) throws RemoteException, UnknownHostException{
-         new CalculadoraServer();
+         
      }
     
 }

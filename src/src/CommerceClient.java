@@ -17,17 +17,18 @@ import java.util.logging.Logger;
  *
  * @author kelvin
  */
-public class CalculadoraClient {
+public class CommerceClient {
     
     
     
     
     public static void main(String[] args) throws NotBoundException {
         try{
-        Calculadora c = (Calculadora) Naming.lookup("rmi://127.0.0.1:1099/CalculadoraService");
+        Commerce c = (Commerce) Naming.lookup("rmi://192.168.0.103:1099/CalculadoraService");
         System.out.println("Adição: " + c.add(10, 10));
         } catch (RemoteException | MalformedURLException ex) {
-            Logger.getLogger(CalculadoraClient.class.getName()).log(Level.SEVERE, null, ex);
+            //Logger.getLogger(CommerceClient.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Deu erro");
         }
     }
     

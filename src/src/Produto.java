@@ -15,11 +15,33 @@ public class Produto {
     private String categoria;
     private String cor;
     private String tamanho;
-    private String preco;
-    private String qtd;
+    private int preco;
+    private int qtd;
+    private String loja;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
     
+    /**
+     *
+     * @param name
+     * @param marca
+     * @param categoria
+     * @param cor
+     * @param tamanho
+     * @param preco
+     * @param qtd
+     * @param loja
+     * @param id
+     */
     public Produto(String name, String marca, String categoria, String cor,
-            String tamanho, String preco, String qtd) {
+            String tamanho, int preco, int qtd, String loja, String id) {
         this.categoria = categoria;
         this.cor = cor;
         this.marca = marca;
@@ -27,6 +49,16 @@ public class Produto {
         this.preco = preco;
         this.qtd = qtd;
         this.tamanho = tamanho;
+        this.loja = loja;
+        this.id = id;
+    }
+
+    public String getLoja() {
+        return loja;
+    }
+
+    public void setLoja(String loja) {
+        this.loja = loja;
     }
 
     public String getName() {
@@ -69,20 +101,26 @@ public class Produto {
         this.tamanho = tamanho;
     }
 
-    public String getPreco() {
+    public int getPreco() {
         return preco;
     }
 
-    public void setPreco(String preco) {
+    public void setPreco(int preco) {
         this.preco = preco;
     }
 
-    public String getQtd() {
+    public int getQtd() {
         return qtd;
     }
 
-    public void setQtd(String qtd) {
-        this.qtd = qtd;
+    public void setQtd(int qtd) {
+        this.qtd = this.qtd - qtd;        
+    }
+    
+    @Override
+    public String toString() {
+        return this.name;
+        
     }
     
     
