@@ -263,12 +263,14 @@ synchronized public ArrayList<String> returnPendencias(String servidor,String id
                                 if(line.split(";")[0].equals(servidor)) {
                                     dset.add(line);
                                 }
-                                line = br.readLine();                                   
-                                if(line.equals("")) break;
+                                line = br.readLine();                                
 			}
 			br.close();
-                        if(dset.isEmpty()) return null;
-                        else return dset;
+                        if(dset.isEmpty()) return null;                        
+                        else {
+                            System.out.println("Pendencia Lida: " + dset.get(0));
+                            return dset;
+                        }
 }
 
 synchronized public void sub() throws InterruptedException {
