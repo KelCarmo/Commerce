@@ -39,6 +39,11 @@ public class CommerceImple extends UnicastRemoteObject implements Commerce {
         System.out.println("Esperando ...");       
         this.produtos.get(index).setQtd(qtd);
         System.out.println("Terminado!");
+        try {
+            this.manager.writeWordsCommerce(this.produtos, "LojaA");
+        } catch (IOException ex) {
+            Logger.getLogger(CommerceImple.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
            
     }

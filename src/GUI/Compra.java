@@ -5,6 +5,9 @@
  */
 package GUI;
 
+import java.rmi.NotBoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import src.Produto;
 
 /**
@@ -14,6 +17,7 @@ import src.Produto;
 public class Compra extends javax.swing.JDialog {
     
     private CommerceCtrl novo;
+    private int index;
     /**
      * Creates new form NewJDialog
      */
@@ -21,6 +25,7 @@ public class Compra extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.novo = novo;
+        this.index = index;
     }    
 
     /**
@@ -40,8 +45,18 @@ public class Compra extends javax.swing.JDialog {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jButton1.setText("Voltar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Confirmar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Quantidade: ");
 
@@ -79,6 +94,18 @@ public class Compra extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            this.novo.updateServer(this.index, this.novo.getProdutos().get(this.index).getId(), 1, this.novo.getProdutos().get(this.index).getLoja());
+        } catch (NotBoundException ex) {
+            Logger.getLogger(Compra.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
    
 

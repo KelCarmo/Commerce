@@ -277,7 +277,7 @@ synchronized public void sub() throws InterruptedException {
 }
 
 synchronized public void escrevePendencia(String idProd, String servidor, int qtd, int index) throws InterruptedException, IOException {
-    this.writeString(servidor+";"+idProd+";"+qtd+";"+index);
+    this.writeString(servidor, servidor+";"+idProd+";"+qtd+";"+index);
 }
 
 /**
@@ -288,17 +288,13 @@ synchronized public void escrevePendencia(String idProd, String servidor, int qt
  * @throws FileNotFoundException
  * @throws IOException 
  */
-private int writeString(String linha) throws FileNotFoundException, IOException {
-    File file = new File("./src/erros/logs.txt");    
-    if(!file.exists()){
-       file = new File("./src/erros/logs.txt");
+synchronized private void writeString(String servidor,String linha) throws FileNotFoundException, IOException {
+    File file = new File("./src/erros/"+servidor);       
        BufferedWriter br = new BufferedWriter(new  FileWriter(file, true));
        if(file.length() != this.size) br.newLine();
        br.write(linha);
-       br.close();       
-       
-       return 1;
-    }else return 0;
+       br.close();            
+   
 }
 
 

@@ -63,7 +63,7 @@ public class CommerceCtrl {
         return model;
     }
      
-     public void verificaEstoqueTodos(String idProd, int index) {
+     public ArrayList<Integer> verificaEstoqueTodos(String idProd, int index) {
          ArrayList<Integer> vetor = new ArrayList(this.vetor.size());
          for(String servidor: this.vetor) {                          
                   
@@ -79,7 +79,8 @@ public class CommerceCtrl {
                                                                                                                                                                           
                  });                                 
              t1.start();
-         } 
+         }
+         return vetor;
          
      }
      
