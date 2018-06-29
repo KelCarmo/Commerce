@@ -254,7 +254,7 @@ synchronized public ArrayList<String> returnPendencias(String servidor,String id
     ArrayList<String> dset = new ArrayList<>();
     File file = new File("./src/erros/"+servidor);
     
-    if(file ==null) return null;
+    if(!file.exists()) return null;
     BufferedReader br = new BufferedReader(new  FileReader(file));                        
 			String line = "";
                         Produto novo;
