@@ -223,8 +223,7 @@ public ArrayList<Produto> loadWordsCommerce() {
                                         Integer.valueOf(line.split(";")[5]),Integer.valueOf(line.split(";")[6]),
                                         arquivo.getName(), line.split(";")[7]);
                                         dset.add(novo);
-                                    line = br.readLine();                                   
-                                    if(line.equals("")) break;
+                                    line = br.readLine();                                                                       
 			}
 			br.close();                        
 		} catch (IOException e) {
