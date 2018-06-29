@@ -31,7 +31,7 @@ public class CommerceCtrl {
     private CommerceClient client;
     private CommerceServer server;
     private ManagerFiles manager;
-    private String[] servidores = {"192.168.0.103"};
+    private String[] servidores = {"192.168.0.105","192.168.0.103"};
     private ArrayList<String> vetor;
     private ArrayList<Produto> produtos;    
 

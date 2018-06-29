@@ -252,7 +252,9 @@ synchronized public  void writeWordsCommerce(ArrayList<Produto> n, String name) 
 
 synchronized public ArrayList<String> returnPendencias(String servidor,String idProd, int index) throws FileNotFoundException, IOException {
     ArrayList<String> dset = new ArrayList<>();
-    File file = new File("./src/erros/logs.txt");
+    File file = new File("./src/erros/"+servidor);
+    
+    if(file ==null) return null;
     BufferedReader br = new BufferedReader(new  FileReader(file));                        
 			String line = "";
                         Produto novo;
