@@ -118,11 +118,21 @@ public class CommerceGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jList1ValueChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            this.novo.updateServer(this.jList1.getSelectedIndex(), this.novo.getProdutos().get(this.jList1.getSelectedIndex()).getId(), 1);
+        this.novo.verificaPendencias(this.novo.getServer().getIp(), this.novo.getProdutos().get(this.jList1.getSelectedIndex()).getId(), this.jList1.getSelectedIndex());
+        Compra dialog = new Compra(this, true, this.novo, this.jList1.getSelectedIndex());
+        dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
+        
+        /*try {
+            this.novo.updateServer(this.jList1.getSelectedIndex(), this.novo.getProdutos().get(this.jList1.getSelectedIndex()).getId(), 1, this.novo.getProdutos().get(this.jList1.getSelectedIndex()).getLoja());
         } catch (NotBoundException ex) {
             Logger.getLogger(CommerceGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         //System.out.println(this.novo.getProdutos().get(this.jList1.getSelectedIndex()).getId());
     }//GEN-LAST:event_jButton1ActionPerformed
 

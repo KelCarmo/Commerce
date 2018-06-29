@@ -23,10 +23,11 @@ import java.util.logging.Logger;
  * @author kelvin
  */
 public class CommerceServer {
-        
+    private String ip;
     
     public CommerceServer(ManagerFiles manager, String ip, ArrayList<Produto> produtos) throws RemoteException, UnknownHostException {
-        try {            
+        try {
+            this.ip = ip;
             System.setProperty("java.rmi.server.hostname", ip);
             LocateRegistry.createRegistry(1099);
             Commerce c = new CommerceImple(manager, produtos);
@@ -35,6 +36,14 @@ public class CommerceServer {
         } catch (AlreadyBoundException | MalformedURLException ex) {
             Logger.getLogger(CommerceServer.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
     
      public static void main(String[] args) throws RemoteException, UnknownHostException{

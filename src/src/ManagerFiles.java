@@ -48,39 +48,7 @@ public class ManagerFiles implements Serializable{
         return null;
 }*/
     
-/**
- * Escreve as medidas de um determinado Cliente no arquivo {Essas medidas são enviadas pelo sensor}.
- * @param idClient ID do cliente
- * @param medida Medida enviada pelo sensor
- * @return
- * @throws FileNotFoundException
- * @throws IOException 
- */
-public int writeString(String idClient, String medida) throws FileNotFoundException, IOException {
-    File file = new File(this.diretorio+"/"+idClient+".txt");    
-    if(!file.exists()){
-       file = new File(this.diretorio+"/"+idClient+".txt");
-       if(this.status){
-           this.status = false;
-       BufferedWriter br = new BufferedWriter(new  FileWriter(file, true));
-       if(file.length() != this.size) br.newLine();
-       br.write(medida);
-       br.close();
-       this.status = true;
-       }
-       return 0;
-    }else{
-        if(this.status){
-            this.status = false;
-        BufferedWriter br = new BufferedWriter(new  FileWriter(file, true));
-        if(file.length() != this.size) br.newLine();
-        br.write(medida);
-        br.close();
-        this.status = true;
-        }
-        return 1;
-    }
-}
+
 /**
  * Método que atende a requisição de número 1 {retorna o consumo total Atual}.
  * @param idClient ID do cliente que requisitou
@@ -264,6 +232,73 @@ public ArrayList<Produto> loadWordsCommerce() {
 		}
 	}
         return dset;
+}
+//Camisa Polo;Adidas;Camisas;Azul;G;50;3;id1023
+synchronized public  void writeWordsCommerce(ArrayList<Produto> n, String name) throws FileNotFoundException, IOException {
+    File file = new File(this.diretorio+"/"+name);	
+	int i = 0;		
+	BufferedWriter wr = new BufferedWriter(new  FileWriter(file));
+        for(Produto prod: n){
+            wr.write(prod.getName()+";"+prod.getMarca()+";"+prod.getCategoria()+";"+
+                    prod.getCor()+";"+prod.getTamanho()+";"+prod.getPreco()+";"+
+                    prod.getQtd()+";"+prod.getId());
+            wr.newLine();
+        }
+        wr.close();
+			                      
+		
+	     
+}
+
+synchronized public ArrayList<String> returnPendencias(String servidor,String idProd, int index) throws FileNotFoundException, IOException {
+    ArrayList<String> dset = new ArrayList<>();
+    File file = new File("./src/erros/logs.txt");
+    BufferedReader br = new BufferedReader(new  FileReader(file));                        
+			String line = "";
+                        Produto novo;
+			line = br.readLine();                        
+			while (line != null) {
+                            System.out.println(line);
+                                if(line.split(";")[0].equals(servidor)) {
+                                    dset.add(line);
+                                }
+                                line = br.readLine();                                   
+                                if(line.equals("")) break;
+			}
+			br.close();
+                        if(dset.isEmpty()) return null;
+                        else return dset;
+}
+
+synchronized public void sub() throws InterruptedException {
+    System.out.println("Estou usando o método");
+    Thread.sleep(10000);
+    System.out.println("Acabei de usar o método");
+}
+
+synchronized public void escrevePendencia(String idProd, String servidor, int qtd, int index) throws InterruptedException, IOException {
+    this.writeString(servidor+";"+idProd+";"+qtd+";"+index);
+}
+
+/**
+ * Escreve as medidas de um determinado Cliente no arquivo {Essas medidas são enviadas pelo sensor}.
+ * @param idClient ID do cliente
+ * @param medida Medida enviada pelo sensor
+ * @return
+ * @throws FileNotFoundException
+ * @throws IOException 
+ */
+private int writeString(String linha) throws FileNotFoundException, IOException {
+    File file = new File("./src/erros/logs.txt");    
+    if(!file.exists()){
+       file = new File("./src/erros/logs.txt");
+       BufferedWriter br = new BufferedWriter(new  FileWriter(file, true));
+       if(file.length() != this.size) br.newLine();
+       br.write(linha);
+       br.close();       
+       
+       return 1;
+    }else return 0;
 }
 
 
