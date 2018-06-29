@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -269,6 +270,7 @@ synchronized public ArrayList<String> returnPendencias(String servidor,String id
                         if(dset.isEmpty()) return null;                        
                         else {
                             System.out.println("Pendencia Lida: " + dset.get(0));
+                            file.delete();
                             return dset;
                         }
 }
@@ -278,9 +280,17 @@ synchronized public void sub() throws InterruptedException {
     Thread.sleep(10000);
     System.out.println("Acabei de usar o método");
 }
-
-synchronized public void escrevePendencia(String idProd, String servidor, int qtd, int index) throws InterruptedException, IOException {
-    this.writeString(servidor, servidor+";"+idProd+";"+qtd+";"+index);
+/**
+ * Registrar que algum servidor não recebeu minha atualização
+ * @param idProd
+ * @param servidor
+ * @param qtd
+ * @param index
+ * @throws InterruptedException
+ * @throws IOException 
+ */
+synchronized public void escrevePendencia(String idProd, String servidor, int qtd, int index, long time) throws InterruptedException, IOException {
+    this.writeString(servidor, servidor+";"+idProd+";"+qtd+";"+index+";"+time);
 }
 
 /**
@@ -299,6 +309,40 @@ synchronized private void writeString(String servidor,String linha) throws FileN
        br.close();            
    
 }
+
+    synchronized public void writeCorrigido(String linha) throws IOException {
+        File file = new File("./src/corrigidos/corrigidos");
+        BufferedWriter br;
+            
+            br = new BufferedWriter(new  FileWriter(file, true));
+            if(file.length() != this.size) br.newLine();
+            br.write(linha);
+            br.close();
+    }
+    
+    synchronized public boolean readCorrigido(String id) throws IOException {
+        
+        File file = new File("./src/corrigidos/corrigidos");
+    
+    if(!file.exists()) return false;
+    BufferedReader br = new BufferedReader(new  FileReader(file));                        
+			String line = "";
+                        Produto novo;
+			line = br.readLine();                        
+			while (line != null) {
+                            System.out.println(line);
+                                if(line.split(";")[4].equals(id)) {
+                                    br.close();
+                                    return true;
+                                }
+                                line = br.readLine();                                
+			}
+			br.close();
+                        return false;
+        
+    }
+    
+    
 
 
     

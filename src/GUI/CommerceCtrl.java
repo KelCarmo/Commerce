@@ -13,6 +13,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -86,10 +87,14 @@ public class CommerceCtrl {
      
      synchronized private void escrevePendenciasLocal(ArrayList<String> vetor) throws IOException {
          if(vetor == null) return; 
-         for(String line: vetor) {                          
+         for(String line: vetor) {
+             if(!this.manager.readCorrigido(line.split(";")[4])){
               this.produtos.get(Integer.valueOf(line.split(";")[3])).setQtd(Integer.valueOf(line.split(";")[2]));
-          }
+              this.manager.writeCorrigido(line);
+             }
+          }         
          this.manager.writeWordsCommerce(this.produtos,"LojaA");
+         
      }
      
      public void verificaPendencias(String serv, String idProd, int index) {         
@@ -135,7 +140,8 @@ public class CommerceCtrl {
                         //Logger.getLogger(CommerceClient.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Deu erro no servidor: " + servidor);
                          try {
-                             this.manager.escrevePendencia(idProd, servidor, qtd, index);
+                             long t = new Date().getTime();
+                             this.manager.escrevePendencia(idProd, servidor, qtd, index, t);
                          } catch (InterruptedException | IOException ex1) {
                              Logger.getLogger(CommerceCtrl.class.getName()).log(Level.SEVERE, null, ex1);
                          }
