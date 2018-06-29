@@ -31,7 +31,7 @@ public class CommerceCtrl {
     private CommerceClient client;
     private CommerceServer server;
     private ManagerFiles manager;
-    private String[] servidores = {"127.0.0.1"};
+    private String[] servidores = {"192.168.0.103"};
     private ArrayList<String> vetor;
     private ArrayList<Produto> produtos;    
 
@@ -50,7 +50,7 @@ public class CommerceCtrl {
         }
         this.manager = new ManagerFiles();        
         this.produtos = this.manager.loadWordsCommerce();
-        this.server = new CommerceServer(this.manager, "127.0.0.1", this.produtos);
+        this.server = new CommerceServer(this.manager, "192.168.0.105", this.produtos);
         this.manager = new ManagerFiles();        
        
     }
