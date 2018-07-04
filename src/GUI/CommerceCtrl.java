@@ -55,7 +55,10 @@ public class CommerceCtrl {
         this.manager = new ManagerFiles();        
        
     }
-    
+        /**
+         * Adiciona um ArrayList no ListModel para ser mostrado na interface
+         * @return 
+         */
      public DefaultListModel initializaList() {
         DefaultListModel model = new DefaultListModel();
         for (Produto produto : this.produtos) {
@@ -64,7 +67,13 @@ public class CommerceCtrl {
         return model;
     }
      
-     public ArrayList<Integer> verificaEstoqueTodos(String idProd, int index) {
+     /**
+      * Método que retorna estoque de um produto de todos os servidores
+      * @param idProd
+      * @param index
+      * @return 
+      */
+     public ArrayList<Integer> verificaEstoqueEdisponibilidade(String idProd, int index) {
          ArrayList<Integer> vetor = new ArrayList(this.vetor.size());
          for(String servidor: this.vetor) {                          
                   
@@ -81,10 +90,19 @@ public class CommerceCtrl {
                  });                                 
              t1.start();
          }
+         for(int estoque: vetor) { 
+             
+         }
+         
          return vetor;
          
      }
      
+     /**
+      * Método que escreve pendencias localmente
+      * @param vetor
+      * @throws IOException 
+      */
      synchronized private void escrevePendenciasLocal(ArrayList<String> vetor) throws IOException {
          if(vetor == null) return; 
          for(String line: vetor) {
@@ -96,7 +114,12 @@ public class CommerceCtrl {
          this.manager.writeWordsCommerce(this.produtos,"LojaA");
          
      }
-     
+     /**
+      * Método que verifica em todos os servidores se existe pendencias de um servidor x
+      * @param serv servidor
+      * @param idProd
+      * @param index 
+      */
      public void verificaPendencias(String serv, String idProd, int index) {         
          for(String servidor: this.vetor) {                          
                   
@@ -104,7 +127,7 @@ public class CommerceCtrl {
                      try {
                          //Verifico se tem pendencias para atualizar deste produto
                          Commerce c = (Commerce) Naming.lookup("rmi://"+servidor+":1099/CommerceService");        
-                            this.escrevePendenciasLocal(c.returnPendencias(serv,idProd, index));
+                            this.escrevePendenciasLocal(c.returnPendencias(serv));
                             System.out.println("Requi executada em: " + servidor);
                         } catch (RemoteException | MalformedURLException | NotBoundException ex) {
                         //Logger.getLogger(CommerceClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,20 +150,46 @@ public class CommerceCtrl {
         this.server = server;
     }
      
+    /**
+     * Faz atualização de estoque em todos os servidores conectados no serviço RMI. Caso um(ou mais) não 
+     * esteja,é feito um registro de pendencia em todos servidores onlines.
+     * @param index
+     * @param idProd
+     * @param qtd
+     * @param loja
+     * @throws NotBoundException 
+     */
      public void updateServer(int index, String idProd, int qtd, String loja) throws NotBoundException{                        
          for(String servidor: this.vetor) {                          
                   
                  Thread t1 = new Thread(() -> {
-                     try {
-                         //Verifico se tem pendencias para atualizar deste produto
+                     try {                         
                          Commerce c = (Commerce) Naming.lookup("rmi://"+servidor+":1099/CommerceService");        
-                            c.sub(qtd, idProd, index);
+                            System.out.println(c.sub(qtd, idProd, index));
                             System.out.println("Requi executada em: " + servidor);
                         } catch (RemoteException | MalformedURLException | NotBoundException ex) {
                         //Logger.getLogger(CommerceClient.class.getName()).log(Level.SEVERE, null, ex);
                         System.out.println("Deu erro no servidor: " + servidor);
                          try {
                              long t = new Date().getTime();
+                             
+                             for(String s: this.vetor) {
+                                 if(!s.equals(servidor)){
+                                     if(!s.equals(this.server.getIp())){
+                                         Thread n = new Thread(() -> {                                                    
+                                             try {
+                                                 Commerce c = (Commerce) Naming.lookup("rmi://"+servidor+":1099/CommerceService");
+                                                 c.escrevePendencia(idProd, servidor, qtd, index, t);
+                                                 System.out.println("Pêndencia de: " + servidor + " foi escrita");
+                                             } catch (NotBoundException | MalformedURLException | RemoteException ex1) {
+                                                 Logger.getLogger(CommerceCtrl.class.getName()).log(Level.SEVERE, null, ex1);
+                                             }
+                                            
+                                         });
+                                         n.start();
+                                     }
+                                 }
+                             }
                              this.manager.escrevePendencia(idProd, servidor, qtd, index, t);
                          } catch (InterruptedException | IOException ex1) {
                              Logger.getLogger(CommerceCtrl.class.getName()).log(Level.SEVERE, null, ex1);

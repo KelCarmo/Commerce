@@ -23,8 +23,8 @@ public interface Commerce extends Remote{
     
     public int returnEstoque(String idProd, int index) throws RemoteException;
     
-    public ArrayList<String> returnPendencias(String servidor, String idProd, int index) throws RemoteException;
+    public ArrayList<String> returnPendencias(String servidor) throws RemoteException;
     
-    
+    public void escrevePendencia(String idProd, String servidor, int qtd, int index, long time) throws RemoteException;
     
 }

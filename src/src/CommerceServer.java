@@ -24,7 +24,14 @@ import java.util.logging.Logger;
  */
 public class CommerceServer {
     private String ip;
-    
+    /**
+     * Inicializa um Server e registra o objeto Commerce noServiço RMI
+     * @param manager instancia do gerenciador de leitura/escrita de arquivo
+     * @param ip ip do server
+     * @param produtos produtos da Loja X
+     * @throws RemoteException
+     * @throws UnknownHostException 
+     */
     public CommerceServer(ManagerFiles manager, String ip, ArrayList<Produto> produtos) throws RemoteException, UnknownHostException {
         try {
             this.ip = ip;

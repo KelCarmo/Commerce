@@ -14,10 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 /**
  *
@@ -28,182 +26,15 @@ public class ManagerFiles implements Serializable{
     private final String diretorio = "./src/dados";
     private final byte size = (byte)0;
     //Atributo responsável servir como um semáforo para gerenciar as escritas e leituras no arquivo, feitas pelas
-    //portas UDP e TCP.
-    private boolean status;
+    //portas UDP e TCP.  
 
     public ManagerFiles() {
-        this.status = true;
+        
     }
-
-/*private File verificaArquivo(String idClient) {
-    File file = new File(this.diretorio);
-	File afile[] = file.listFiles();
-	int i = 0;
-	for (int j = afile.length; i < j; i++) {
-		File arquivo = afile[i];
-                System.out.println(arquivo.getName());
-                if(arquivo.getName().equals(idClient+".txt")) {
-                    return arquivo;
-                }
-	}
-        return null;
-}*/
-    
-
 /**
- * Método que atende a requisição de número 1 {retorna o consumo total Atual}.
- * @param idClient ID do cliente que requisitou
- * @return Retorna a última medida enviada pelo sensor do cliente.
+ * Método que carrega os Produtos das Lojas que se encontram no diretório "dados"
+ * @return Lista de Produtos
  */
-public String readStringLast(String idClient)  {
-    File file = new File(this.diretorio+"/"+idClient+".txt");
-    String ultimo = "";
-		try {
-			if(this.status){
-                            this.status = false;
-			BufferedReader br = new BufferedReader(new  FileReader(file));
-
-			String line = "";
-			while (line != null) {
-				line = br.readLine();
-				if (line != null) {
-					ultimo = line;
-				}
-			}
-
-			br.close();
-                        this.status = true;
-			return ultimo;
-                        }else{
-                            readStringLast(idClient);
-                        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        return null;
-}
-
-/**
- * Método que atende a requisição de número 2 {Retirna para o cliente o total de consumo em um dia
- * determinado pelo usuário}.
- * @param idClient ID do cliente que requisitou
- * @param data data que o cliente especificou na requisição
- * @return Uma String concatenada com a medida do primeiro consumo do dia e o último.
- */
-public String calcConsumoData(String idClient, String data)  {
-    File file = new File(this.diretorio+"/"+idClient+".txt");
-		try {
-			if(this.status){
-                            this.status = false;
-			BufferedReader br = new BufferedReader(new  FileReader(file));
-                        String firstValue = "";
-                        String lastValue = "";
-			String line = "";
-			while (line != null) {
-				line = br.readLine();
-				if (line != null && firstValue.equals("")) {
-                                    if(line.split(";")[2].split(" ")[0].equals(data)){
-                                        firstValue = line.split(";")[4];
-                                    }
-                                }
-                                    if(line != null && !firstValue.equals("")){
-                                        if(line.split(";")[2].split(" ")[0].equals(data)){
-                                        lastValue = line.split(";")[4];
-                                    }
-				}
-			}                       
-                            
-                            br.close();
-                            this.status = true;
-                            return firstValue+";"+lastValue;
-                                               
-                        }else{
-                            calcConsumoData(idClient, data);
-                        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch (NumberFormatException e){
-                            e.printStackTrace();
-                        } 
-        return null;
-}
-
-/**
- * Método Método que atende a requisição de número 3 {Retorna para o cliente o consumo total 
- * em um intervalo de datas especificado por ele}
- * @param idClient ID do Cliente
- * @param data Data inicial.
- * @param dataFinal Data final.
- * @return Retorna uma String concatenada que contém a medida inicial e final nesse intervalo de datas.
- */
-public String calcConsumoData(String idClient, String data, String dataFinal)  {
-    File file = new File(this.diretorio+"/"+idClient+".txt");
-		try {
-			if(this.status){
-                            this.status = false;
-			BufferedReader br = new BufferedReader(new  FileReader(file));
-                        String firstValue = "";
-                        String lastValue = "";
-			String line = "";
-			while (line != null) {
-				line = br.readLine();
-				if (line != null && firstValue.equals("")) {
-                                    if(line.split(";")[2].split(" ")[0].equals(data)){
-                                        firstValue = line.split(";")[4];
-                                    }
-                                }
-                                    if(line != null && !firstValue.equals("")){
-                                        if(line.split(";")[2].split(" ")[0].equals(dataFinal)){
-                                        lastValue = line.split(";")[4];
-                                    }
-				}
-			}                       
-                            
-                            br.close();
-                            this.status = true;
-                            return firstValue+";"+lastValue;
-                                               
-                        }else{
-                            calcConsumoData(idClient, data, dataFinal);
-                        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}catch (NumberFormatException e){
-                            e.printStackTrace();
-                        } 
-        return null;
-}
-
-public HashMap<Character,HashSet<String>> loadWords() {
-    
-    HashMap<Character,HashSet<String>> example = new HashMap<Character,HashSet<String>>();        
-    File file = new File(this.diretorio+"/words.dic");   
-		try {			
-			BufferedReader br = new BufferedReader(new  FileReader(file));                        
-			String line = "";
-                        char firstLine;
-                        HashSet<String> dset;
-			line = br.readLine();                        
-			while (line != null) {                                
-                                firstLine = line.charAt(0);
-                                if(example.get(firstLine) == null) dset = new HashSet<String>();
-                                else dset = example.get(firstLine);
-                                if(firstLine == 'Y') System.out.println(line);
-				while(firstLine == line.charAt(0)){
-                                    dset.add(line);
-                                    line = br.readLine();
-                                    if(line == null) break;
-                                }
-                               example.put(firstLine, dset);
-			}
-			br.close();
-                        return example;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        return null;                       
-}
-
 public ArrayList<Produto> loadWordsCommerce() {
     ArrayList<Produto> dset = new ArrayList<>();
     File file = new File(this.diretorio);
@@ -219,6 +50,7 @@ public ArrayList<Produto> loadWordsCommerce() {
 			line = br.readLine();                        
 			while (line != null) {
                             System.out.println(line);
+                                //Cria Produto
                                 novo = new Produto(line.split(";")[0],line.split(";")[1] ,
                                         line.split(";")[2], line.split(";")[3], line.split(";")[4],
                                         Integer.valueOf(line.split(";")[5]),Integer.valueOf(line.split(";")[6]),
@@ -234,6 +66,13 @@ public ArrayList<Produto> loadWordsCommerce() {
         return dset;
 }
 //Camisa Polo;Adidas;Camisas;Azul;G;50;3;id1023
+/**
+ * Método que escreve as atualizações de produtos no arquivo
+ * @param n
+ * @param name
+ * @throws FileNotFoundException
+ * @throws IOException 
+ */
 synchronized public  void writeWordsCommerce(ArrayList<Produto> n, String name) throws FileNotFoundException, IOException {
     File file = new File(this.diretorio+"/"+name);	
 	int i = 0;		
@@ -250,7 +89,14 @@ synchronized public  void writeWordsCommerce(ArrayList<Produto> n, String name) 
 	     
 }
 
-synchronized public ArrayList<String> returnPendencias(String servidor,String idProd, int index) throws FileNotFoundException, IOException {
+/**
+ * Método que retorna ações pendentes de um servidor
+ * @param servidor ip do servidor
+ * @return Lista de pendencias de um determinado servidor
+ * @throws FileNotFoundException
+ * @throws IOException 
+ */
+synchronized public ArrayList<String> returnPendencias(String servidor) throws FileNotFoundException, IOException {
     ArrayList<String> dset = new ArrayList<>();
     File file = new File("./src/erros/"+servidor);
     
@@ -275,29 +121,24 @@ synchronized public ArrayList<String> returnPendencias(String servidor,String id
                         }
 }
 
-synchronized public void sub() throws InterruptedException {
-    System.out.println("Estou usando o método");
-    Thread.sleep(10000);
-    System.out.println("Acabei de usar o método");
-}
 /**
  * Registrar que algum servidor não recebeu minha atualização
  * @param idProd
  * @param servidor
  * @param qtd
  * @param index
+ * @param time
  * @throws InterruptedException
  * @throws IOException 
  */
-synchronized public void escrevePendencia(String idProd, String servidor, int qtd, int index, long time) throws InterruptedException, IOException {
+public void escrevePendencia(String idProd, String servidor, int qtd, int index, long time) throws InterruptedException, IOException {
     this.writeString(servidor, servidor+";"+idProd+";"+qtd+";"+index+";"+time);
 }
 
 /**
- * Escreve as medidas de um determinado Cliente no arquivo {Essas medidas são enviadas pelo sensor}.
- * @param idClient ID do cliente
- * @param medida Medida enviada pelo sensor
- * @return
+ * Escreve uma pendencia no arquivo de log de erros
+ * @param servidor
+ * @param linha
  * @throws FileNotFoundException
  * @throws IOException 
  */
@@ -310,7 +151,12 @@ synchronized private void writeString(String servidor,String linha) throws FileN
    
 }
 
-    synchronized public void writeCorrigido(String linha) throws IOException {
+/**
+ * Escreve uma pendencia no arquivo de "corrigidos". Esse método evita que a mesma pendencia seja feita mais de uma vez;
+ * @param linha
+ * @throws IOException 
+ */
+synchronized public void writeCorrigido(String linha) throws IOException {
         File file = new File("./src/corrigidos/corrigidos");
         BufferedWriter br;
             
@@ -320,7 +166,13 @@ synchronized private void writeString(String servidor,String linha) throws FileN
             br.close();
     }
     
-    synchronized public boolean readCorrigido(String id) throws IOException {
+/**
+ * Método que verifica se uma pendencia já foi corrigida.
+ * @param idPendencia
+ * @return true, se a pendencia já foi corrigida. Flase, se não foi
+ * @throws IOException 
+ */
+synchronized public boolean readCorrigido(String idPendencia) throws IOException {
         
         File file = new File("./src/corrigidos/corrigidos");
     
@@ -331,7 +183,7 @@ synchronized private void writeString(String servidor,String linha) throws FileN
 			line = br.readLine();                        
 			while (line != null) {
                             System.out.println(line);
-                                if(line.split(";")[4].equals(id)) {
+                                if(line.split(";")[4].equals(idPendencia)) {
                                     br.close();
                                     return true;
                                 }

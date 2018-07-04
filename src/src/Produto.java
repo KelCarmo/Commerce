@@ -6,7 +6,7 @@
 package src;
 
 /**
- *
+ *Classe que representa os produtos à venda
  * @author kelvin
  */
 public class Produto {
@@ -119,7 +119,7 @@ public class Produto {
     
     @Override
     public String toString() {
-        return this.name;
+        return this.name + "  " + "R$"+this.preco+",00" +"  Cor:" +this.cor;
         
     }
     
